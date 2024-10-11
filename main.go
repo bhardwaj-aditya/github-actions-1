@@ -3,7 +3,8 @@ package main
 import "fmt"
 
 func greeting() string {
-  return "Hello world!"
+  s := fmt.Sprintf("Hello world!")
+  return s
 }
 
 func main() {
