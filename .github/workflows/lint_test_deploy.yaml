@@ -1,5 +1,9 @@
 name: Lint, Test and Deploy
 on: push
+permissions:
+  pull-requests: write
+  contents: read
+  checks: write
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -18,7 +22,6 @@ jobs:
           version: v1.61.0
   test:
       runs-on: ubuntu-latest
-      needs: lint
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
@@ -29,7 +32,19 @@ jobs:
         - name: Check the go version
           run: go version
         - name: Test run
-          run: go test ./...
+          run: |
+            EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+            echo "test_result<<$EOF" >> "$GITHUB_ENV"
+            go test ./... >> "$GITHUB_ENV"
+            echo "$EOF" >> "$GITHUB_ENV"
+        - uses: marocchino/sticky-pull-request-comment@v2
+          with:
+            header: test
+            append: true
+            message: |
+              ```
+              ${{ env.test_result }}
+              ```
   deploy:
       runs-on: ubuntu-latest
       needs: test
