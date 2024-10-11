@@ -43,6 +43,6 @@ jobs:
         - name: Check the go version
           run: go version
         - name: Build the code
-          run: go build main.go -o greetings
+          run: go build -o greetings
         - name: Run the code
           run: ./greetings
