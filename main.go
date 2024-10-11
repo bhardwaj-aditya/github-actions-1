@@ -2,7 +2,11 @@ package main
 
 import "fmt"
 
+func greeting() string {
+  s := fmt.Sprintf("Hello world!")
+  return s
+}
+
 func main() {
-    s := fmt.Sprintf("Hello world!")
-    fmt.Println(s)
+    fmt.Println(greeting())
 }

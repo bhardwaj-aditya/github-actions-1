@@ -9,6 +9,40 @@ jobs:
       - name: Install go1.21.5
         uses: actions/setup-go@v5
         with:
-          go-version: '^1.21.5'
+          go-version: '1.21.5'
       - name: Check the go version
         run: go version
+      - name: Install golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.61.0
+  test:
+      runs-on: ubuntu-latest
+      needs: lint
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+        - name: Install go1.21.5
+          uses: actions/setup-go@v5
+          with:
+            go-version: '1.21.5'
+        - name: Check the go version
+          run: go version
+        - name: Test run
+          run: go test ./...
+  deploy:
+      runs-on: ubuntu-latest
+      needs: test
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+        - name: Install go1.21.5
+          uses: actions/setup-go@v5
+          with:
+            go-version: '1.21.5'
+        - name: Check the go version
+          run: go version
+        - name: Build the code
+          run: go build main.go -o greetings
+        - name: Run the code
+          run: ./greetings
